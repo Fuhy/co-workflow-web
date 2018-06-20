@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Projects</title>
+    {% load static %}
+    <script src="http://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.3.1/dist/semantic.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.3.1/dist/semantic.min.css">
+</head>
+
+<body>
+    <!-- MENU -->
+    <div class="ui inverted vertical segment">
+        <div class="ui container">
+            <div class="ui inverted menu ">
+                <div class="ui container">
+                    <div class="ui inverted borderless menu">
+                        <div class="ui item"><a href={{user_page}}>Home</a></div>
+                        <div class="ui active item"><a href="">Project</a></div>
+                        <div class="ui item"><a href="">Person</a></div>
+                    </div>
+                    <div class="ui right secondary menu">
+                        <div class="ui borderless item">
+                            <a class="ui inverted circular button">Sign out</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="ui hidden divider"></div>
+    <!-- MAIN CONTENT -->
+    <div class="ui hidden divider"></div>
+    <div class="ui grid container">
+        <div class="ui six wide column">
+            <div class="ui card">
+                <div class="image">
+                    <img src="{% static 'projects/images/rick.jpeg' %}">
+                </div>
+                <div class="content">
+                    <div class="header">Rick</div>
+                    <div class="meta">
+                        <a>username</a>
+                    </div>
+                    <div class="description">
+                        Rick is a scientist.
+                    </div>
+                </div>
+                <div class="extra content">
+                    <span class="right floated"></span>
+                    <span><i class="blue user icon"></i>2 Groups</span>
+                </div>
+            </div>
+            <div class="ui basic search button"><a  target="view_window" href={% static 'projects/render.html' %}>Show Graph!</a></div>
+        </div>
+        <div class="ui ten wide column ">
+            <div class="ui container">
+                <h1 class="ui header">Projects</h1>
+                <div class="ui hidden divider"></div>
+            </div>
+            <!-- PROJECTS -->
+            <div class="ui container">
+                <div class="ui mini horizontal list">
+                    {% for people in group_list %}
+                    <div class="item">
+                        <img class="ui avatar image" src={% static 'projects/images/' %}{{people}}.jpg>
+                        <div class="content">
+                            <div class="header">{{ people }}</div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="ui hidden divider"></div>
+            <div class="ui styled accordion">
+                {% for item in node_details %} {% if item.task_ID == -1 %}
+            </div>
+            {% elif item.task_ID == -2 %}
+            <div class="accordion">
+                {% else %}
+                <div class="title">
+                    {% if item.status == 'True' %}
+                    <i class="green dropdown icon"></i> {{item.task_name}}
+                    {% else %}
+                    <i class="red dropdown icon"></i> {{item.task_name}}
+                    {% endif %}
+                </div>
+                <div class="content">
+                    <div class="ui container">
+                        <div class="large circular ui basic icon buttons">
+                            <div value={{item.task_ID}} class="ui button" id="edit_details"><i class="ui green pencil icon"></i></div>
+                            <div value={{item.task_ID}} class="ui button" id="edit_group"><i class="ui blue plus icon"></i></div>
+                            <div class="ui button"><i class="ui teal clock icon"></i></div>
+                            <div class="ui button"><i class="ui yellow alarm icon"></i></div>
+                            <div value={{item.task_ID}} class="ui button" id="remove_task"><i class="ui red trash icon"></i></div>
+                        </div>
+                    </div>
+                    <pre></pre>
+                    <pre>{{item.abstract}}</pre><pre></pre> {% endif %} {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="ui container">
+        <div class="ui small modal" id="edit_details_modal">
+            <div class="header">Modify</div>
+            <div class="content">
+                <div class="ui container">
+                    <form class="ui form" action="" method="get" id="edit_details_form">
+                        <div class="field">
+                            <label>Task name</label>
+                            <input type="text" name="task_name" placeholder="">
+                        </div>
+                        <div class="field">
+                            <label>Abstract</label>
+                            <textarea type="text" name="abstract" ></textarea>
+                        </div>
+                        <div class="field">
+                            <div class="field">
+                                <select name="group_list" multiple="" class="ui fluid dropdown">
+                                    {% for i in group_list %}
+                                    <option value="{{ i }}">{{ i }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <div class="ui compact selection dropdown">
+                                <input type="hidden" name="status">
+                                <i class="dropdown icon"></i>
+                                <div class="default text">Status</div>
+                                <div class="menu">
+                                    <div class="item" data-value="1">Already done!</div>
+                                    <div class="item" data-value="0">Not finished yet.</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ui hidden divider"></div>
+                        <div class="actions">
+                            <div class="ui cancel button">Cancel</div>
+                            <input class="ui primary approve button" type="submit" value="Submit"></input>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="ui modal" id="remove_task_modal">
+        <div class="header">
+            Delete Your Task?
+        </div>
+        <div class="content">
+            <p>Are you sure you want to delete your tasks?</p>
+            <p>This manipulation will also detele the tasks it points to.</p>
+        </div>
+        <div class="actions">
+            <form action='' method="get" id='remove_task_form'>
+                <div class="ui blue right labeled icon button">
+                    No
+                    <i class="times icon"></i>
+                </div>
+                <input type='submit' class="ui negative right  icon button" value="Yes">
+                </input>
+            </form>
+        </div>
+    </div>
+    <div class="ui modal" id="edit_group_modal">
+        <div class="header">Create</div>
+        <div class="content">
+            <div class="ui container">
+            </div>
+            <div class="ui container">
+                <form class="ui form" id="edit_group_form" action="" method='get'>
+                    <div class="field">
+                        <label>Task name</label>
+                        <input type="text" name="task_name" placeholder="">
+                    </div>
+                    <div class="field">
+                        <label>Workmate</label>
+                        <div class="ui fluid multiple search selection dropdown">
+                            <input type="hidden" name="user">
+                            <i class="dropdown icon"></i>
+                            <div class="default text">Select Friend</div>
+                            <div class="menu">
+                                {% for i in group_list %}
+                                <div class="item" data-value={{i}}>
+                                    {{i}}
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Abstract</label>
+                        <textarea rows="4" type="text" name="abstract" placeholder=""> </textarea>
+                    </div>
+                    <button class="ui positive button" type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="ui modal" id="edit_group_modal">
+        <div class="header">Create</div>
+        <div class="content">
+            <div class="ui container">
+                <form class="ui form" id="edit_group_form" action="" method='get'>
+                    <div class="field">
+                        <label>Task name</label>
+                        <input type="text" name="task_name" placeholder="">
+                    </div>
+                    <div class="field">
+                        <label>Workmate</label>
+                        <div class="ui fluid multiple search selection dropdown">
+                            <input type="hidden" name="user">
+                            <i class="dropdown icon"></i>
+                            <div class="default text">Select Friend</div>
+                            <div class="menu">
+                                {% for i in group_list %}
+                                <div class="item" data-value={{i}}>
+                                    {{i}}
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label>Abstract</label>
+                        <textarea rows="4" type="text" name="abstract" placeholder="Abstract"></textarea>
+                    </div>
+                    <button class="ui positive button" type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+$('.ui.accordion')
+    .accordion();
+$('.ui.dropdown').
+dropdown();
+
+$("div#edit_details").click(function() {
+    $('#edit_details_modal').modal('show');
+    $('#edit_details_form').attr('action', "/forms/edit_task_details/" + $(this).attr('value'))
+});
+
+$("div#edit_group").click(function() {
+    $('#edit_group_modal')
+        .modal('show')
+    $('#edit_group_form').attr('action', "/forms/edit_task_group/" + $(this).attr('value'))
+});
+
+$("div#remove_task").click(function() {
+    $('#remove_task_modal')
+        .modal('show')
+    $('#remove_task_form').attr('action', "/forms/remove_task/" + $(this).attr('value'))
+});
+</script>
+
+</html>
